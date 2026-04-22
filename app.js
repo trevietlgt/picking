@@ -1,4 +1,4 @@
-const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwXGrvauDqgf26ft9kGPvEBItYNGXZkXPEFGngvoFsw/dev';
+const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec';
 const STORAGE_KEYS = {
   PICKER: 'picking_picker_name'
 };
