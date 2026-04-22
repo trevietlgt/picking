@@ -17,8 +17,8 @@
       --warning: #f59e0b;
       --danger: #dc2626;
       --border: #e5e7eb;
-      --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
+      --shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
     }
     * { box-sizing: border-box; }
     body {
@@ -30,43 +30,39 @@
     .container {
       max-width: 860px;
       margin: 0 auto;
-      padding: 16px;
+      padding: 12px;
     }
     .card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 16px;
+      padding: 12px;
       box-shadow: var(--shadow);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
-      margin: 0 0 8px;
+      margin: 0 0 6px;
     }
     .subtitle {
       color: var(--muted);
-      font-size: 14px;
-      margin: 0 0 12px;
-      line-height: 1.5;
+      font-size: 13px;
+      margin: 0 0 10px;
+      line-height: 1.4;
     }
     .input, .select {
       width: 100%;
-      padding: 13px 14px;
+      padding: 12px 13px;
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 12px;
       font-size: 16px;
       outline: none;
       background: #fff;
     }
-    .input:focus, .select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
     .btn {
       border: 0;
-      border-radius: 14px;
-      padding: 13px 16px;
+      border-radius: 12px;
+      padding: 12px 14px;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
@@ -75,33 +71,32 @@
     .btn:active { transform: translateY(1px); }
     .btn[disabled] { opacity: .6; cursor: not-allowed; }
     .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-dark); }
     .btn-success { background: var(--success); color: #fff; }
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-ghost { background: #eef2ff; color: #1e3a8a; }
     .btn-dark { background: #111827; color: #fff; }
-    .btn-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
     .btn-row-3 {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
+    }
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
     }
     .row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .meta {
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 13px;
+      line-height: 1.55;
     }
     .badge {
       display: inline-flex;
@@ -116,25 +111,25 @@
     .status-DA_PICK { background: #dcfce7; color: #166534; }
     .order-item {
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
-      margin-top: 12px;
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
       background: #fff;
     }
     .order-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .big-label {
       color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 8px;
+      font-size: 13px;
+      margin-bottom: 6px;
     }
     .big-value {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.15;
       word-break: break-word;
     }
     .center { text-align: center; }
@@ -142,85 +137,100 @@
     .filters {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
     }
     .loading {
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
-      padding: 12px 0;
+      padding: 10px 0;
     }
     .summary-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
     }
     .summary-box {
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 10px;
       text-align: center;
       background: #fff;
     }
     .summary-box .n {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       margin-top: 6px;
     }
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 24px;
+      bottom: 18px;
       transform: translateX(-50%);
       background: rgba(17, 24, 39, .95);
       color: #fff;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 12px;
       box-shadow: var(--shadow);
       z-index: 9999;
-      font-size: 14px;
+      font-size: 13px;
       display: none;
-      max-width: calc(100vw - 32px);
+      max-width: calc(100vw - 24px);
       white-space: pre-wrap;
     }
     .divider {
       height: 1px;
       background: var(--border);
-      margin: 14px 0;
+      margin: 10px 0;
     }
     .api-box {
-      padding: 10px 12px;
+      padding: 9px 11px;
       border-radius: 12px;
       background: #eff6ff;
       color: #1e3a8a;
-      font-size: 12px;
+      font-size: 11px;
       word-break: break-all;
     }
-    .stat-line {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 12px;
+    .mini-toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 8px;
     }
-    .stat-pill {
+    .mini-stats {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .mini-stat {
+      flex: 1 1 30%;
+      min-width: 90px;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 8px 10px;
       text-align: center;
       background: #fafafa;
     }
-    .stat-pill .v {
+    .mini-stat .k {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .mini-stat .v {
       font-size: 20px;
       font-weight: 800;
-      margin-top: 4px;
+      line-height: 1.1;
     }
-    .queue-indicator {
-      font-size: 13px;
+    .sync-text {
+      font-size: 12px;
       color: #92400e;
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      padding: 8px 10px;
-      border-radius: 12px;
+      min-height: 16px;
+      margin-top: 6px;
+      font-weight: 700;
     }
     .modal {
       position: fixed;
@@ -230,7 +240,7 @@
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      padding: 16px;
+      padding: 12px;
     }
     .modal.show {
       display: flex;
@@ -240,69 +250,70 @@
       max-height: 85vh;
       overflow: hidden;
       background: #fff;
-      border-radius: 18px;
+      border-radius: 16px;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
     }
     .modal-header {
-      padding: 16px;
+      padding: 12px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .modal-body {
-      padding: 16px;
+      padding: 12px;
       overflow: auto;
       background: #fafafa;
     }
     .history-list {
       display: grid;
-      gap: 10px;
+      gap: 8px;
     }
     .history-item {
       background: #fff;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 10px;
     }
     .history-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
     }
     .history-code {
       font-weight: 800;
-      font-size: 16px;
+      font-size: 15px;
     }
     .history-name {
-      margin-top: 4px;
+      margin-top: 3px;
       color: var(--text);
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.4;
     }
     .history-meta {
-      margin-top: 8px;
+      margin-top: 6px;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 12px;
+      line-height: 1.45;
     }
     .empty-box {
       text-align: center;
       color: var(--muted);
-      padding: 24px;
+      padding: 20px;
       background: #fff;
       border: 1px dashed var(--border);
-      border-radius: 14px;
+      border-radius: 12px;
     }
     @media (max-width: 640px) {
-      .filters, .btn-row, .btn-row-3, .summary-grid, .stat-line { grid-template-columns: 1fr; }
-      .big-value { font-size: 28px; }
-      .title { font-size: 22px; }
-      .modal-header { align-items: flex-start; }
+      .filters, .btn-row, .btn-row-3, .summary-grid { grid-template-columns: 1fr; }
+      .big-value { font-size: 26px; }
+      .title { font-size: 20px; }
+      .mini-stat { flex: 1 1 calc(33.333% - 6px); min-width: 0; }
+      .container { padding: 10px; }
     }
   </style>
 </head>
@@ -310,12 +321,12 @@
   <div class="container">
     <section id="loginScreen" class="card">
       <h1 class="title">Picking App</h1>
-      <p class="subtitle">Đã tối ưu chuyển vị trí nhanh hơn và có popup xem lịch sử mã hàng đã pick.</p>
+      <p class="subtitle">Bản giao diện gọn cho PDA, giảm chiều cao màn hình khi pick.</p>
       <div class="api-box">https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec</div>
-      <div style="height:12px"></div>
+      <div style="height:10px"></div>
       <label class="subtitle" for="pickerName">Tên picker</label>
       <input id="pickerName" class="input" type="text" placeholder="Ví dụ: Đức / Picker 1" />
-      <div style="height:12px"></div>
+      <div style="height:10px"></div>
       <button class="btn btn-primary" onclick="startApp()">Bắt đầu</button>
     </section>
 
@@ -361,28 +372,28 @@
               Picker: <b id="activePicker"></b>
             </div>
           </div>
-          <div>
-            <button class="btn btn-dark" onclick="openHistoryModal()">Xem lịch sử đã pick</button>
-          </div>
         </div>
 
-        <div class="stat-line">
-          <div class="stat-pill">
-            <div>Đã pick</div>
+        <div class="mini-toolbar">
+          <button class="btn btn-dark" onclick="openHistoryModal()">Xem lịch sử đã pick</button>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <div class="k">Đã pick</div>
             <div id="pickedCount" class="v">0</div>
           </div>
-          <div class="stat-pill">
-            <div>Còn lại</div>
+          <div class="mini-stat">
+            <div class="k">Còn lại</div>
             <div id="remainingCount" class="v">0</div>
           </div>
-          <div class="stat-pill">
-            <div>Chờ đồng bộ</div>
+          <div class="mini-stat">
+            <div class="k">Đang xử lý</div>
             <div id="pendingSyncCount" class="v">0</div>
           </div>
         </div>
-        <div id="queueIndicator" class="queue-indicator hidden" style="margin-top:12px;">
-          Đang đồng bộ dữ liệu nền...
-        </div>
+
+        <div id="syncText" class="sync-text"></div>
       </div>
 
       <div class="card center">
@@ -392,8 +403,8 @@
         <div class="big-label">Mã hàng</div>
         <div id="itemCode" class="title"></div>
         <div class="big-label">Tên hàng</div>
-        <div id="itemName" style="font-size:20px;font-weight:700"></div>
-        <div style="height:14px"></div>
+        <div id="itemName" style="font-size:18px;font-weight:700"></div>
+        <div style="height:10px"></div>
         <div class="big-label">Số lượng cần lấy</div>
         <div id="allocQty" class="big-value"></div>
       </div>
@@ -431,7 +442,7 @@
             <div id="sumMissing" class="n">0</div>
           </div>
         </div>
-        <div style="height:12px"></div>
+        <div style="height:10px"></div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="openNextOrderFromSummary()">Pick đơn tiếp theo</button>
           <button class="btn btn-ghost" onclick="goOrdersFromSummary()">Về danh sách đơn</button>
@@ -446,7 +457,7 @@
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-header">
         <div>
-          <div class="title" style="margin:0;font-size:22px;">Lịch sử mã hàng đã pick</div>
+          <div class="title" style="margin:0;font-size:20px;">Lịch sử mã hàng đã pick</div>
           <div id="historySubtitle" class="subtitle" style="margin:6px 0 0 0;"></div>
         </div>
         <button class="btn btn-ghost" onclick="closeHistoryModal()">Đóng</button>
