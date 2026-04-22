@@ -16,7 +16,6 @@
       --danger: #dc2626;
       --border: #e5e7eb;
     }
-
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -45,6 +44,7 @@
       color: var(--muted);
       font-size: 14px;
       margin-bottom: 12px;
+      line-height: 1.5;
     }
     .input, .select {
       width: 100%;
@@ -146,6 +146,14 @@
       font-weight: 800;
       margin-top: 6px;
     }
+    .notice {
+      padding: 12px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
     @media (max-width: 640px) {
       .filters, .btn-row, .summary-grid { grid-template-columns: 1fr; }
       .big-value { font-size: 28px; }
@@ -156,10 +164,9 @@
   <div class="container">
     <section id="loginScreen" class="card">
       <h1 class="title">Picking App</h1>
-      <div class="subtitle">Frontend chạy trên GitHub Pages, dữ liệu lấy từ Google Sheet qua Apps Script API.</div>
-      <label class="subtitle" for="apiUrl">Apps Script Web App URL</label>
-      <input id="apiUrl" class="input" type="text" placeholder="Dán URL Apps Script /exec vào đây" />
-      <div style="height:12px"></div>
+      <div class="notice">App đã gắn sẵn Google Apps Script API, không cần nhập link mỗi lần.</div>
+      <div class="subtitle"><b>Google Sheet:</b><br>https://docs.google.com/spreadsheets/d/1ODNEqtj2PdGByUlSGkAgrkDdqBp72-3lmxktdJPT_yo/edit?gid=1327967099#gid=1327967099</div>
+      <div class="subtitle"><b>API:</b><br>https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec</div>
       <label class="subtitle" for="pickerName">Tên picker</label>
       <input id="pickerName" class="input" type="text" placeholder="Ví dụ: Duc" />
       <div style="height:12px"></div>

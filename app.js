@@ -1,10 +1,10 @@
+const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec';
 const STORAGE_KEYS = {
-  API_URL: 'picking_api_url',
   PICKER: 'picking_picker_name'
 };
 
 let state = {
-  apiUrl: '',
+  apiUrl: DEFAULT_API_URL,
   pickerName: '',
   orders: [],
   currentOrder: null,
@@ -15,9 +15,7 @@ let state = {
 };
 
 function initSavedValues() {
-  const savedApi = localStorage.getItem(STORAGE_KEYS.API_URL) || '';
   const savedPicker = localStorage.getItem(STORAGE_KEYS.PICKER) || '';
-  document.getElementById('apiUrl').value = savedApi;
   document.getElementById('pickerName').value = savedPicker;
 }
 
@@ -26,10 +24,6 @@ function showSection(sectionId) {
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById(sectionId).classList.remove('hidden');
-}
-
-function normalizeApiUrl(url) {
-  return (url || '').trim().replace(/\/$/, '');
 }
 
 async function apiRequest(action, payload = {}, method = 'POST') {
@@ -41,7 +35,8 @@ async function apiRequest(action, payload = {}, method = 'POST') {
     Object.entries(payload).forEach(([k, v]) => {
       if (v !== undefined && v !== null) url.searchParams.set(k, v);
     });
-    const res = await fetch(url.toString(), { method: 'GET' });
+    const res = await fetch(url.toString());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
   }
 
@@ -50,19 +45,15 @@ async function apiRequest(action, payload = {}, method = 'POST') {
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ action, ...payload })
   });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   return await res.json();
 }
 
 async function startApp() {
-  const apiUrl = normalizeApiUrl(document.getElementById('apiUrl').value);
   const pickerName = document.getElementById('pickerName').value.trim();
-
-  if (!apiUrl) return alert('Anh nhập Apps Script Web App URL trước nhé.');
   if (!pickerName) return alert('Anh nhập tên picker trước nhé.');
 
-  state.apiUrl = apiUrl;
   state.pickerName = pickerName;
-  localStorage.setItem(STORAGE_KEYS.API_URL, apiUrl);
   localStorage.setItem(STORAGE_KEYS.PICKER, pickerName);
 
   document.getElementById('helloText').textContent = `Picker: ${pickerName}`;
@@ -77,7 +68,7 @@ async function loadOrders() {
     state.orders = Array.isArray(data.orders) ? data.orders : [];
     renderOrders();
   } catch (err) {
-    alert('Không tải được danh sách đơn: ' + err.message);
+    alert('Không tải được danh sách đơn: ' + err.message + '\n\nNếu vẫn lỗi thì Apps Script API hiện tại chưa trả JSON hoặc chưa bật quyền public.');
   } finally {
     document.getElementById('ordersLoading').classList.add('hidden');
   }
@@ -89,12 +80,8 @@ function renderOrders() {
   const tripFilter = document.getElementById('tripFilter').value.trim();
 
   let orders = [...state.orders];
-  if (statusFilter !== 'ALL') {
-    orders = orders.filter(o => o.status === statusFilter);
-  }
-  if (tripFilter) {
-    orders = orders.filter(o => String(o.tripNo) === tripFilter);
-  }
+  if (statusFilter !== 'ALL') orders = orders.filter(o => o.status === statusFilter);
+  if (tripFilter) orders = orders.filter(o => String(o.tripNo) === tripFilter);
 
   if (!orders.length) {
     box.innerHTML = '<div class="card">Không có đơn phù hợp.</div>';
@@ -166,7 +153,6 @@ async function confirmLine() {
 
     state.currentLines[state.currentIndex].result = 'OK';
     state.currentLines[state.currentIndex].missingQty = 0;
-
     await moveNext();
   } catch (err) {
     alert('Lưu CONFIRM lỗi: ' + err.message);
@@ -180,9 +166,7 @@ async function skipLine() {
 
   const reason = prompt('Lý do skip (ví dụ: thiếu hàng / hết hàng):', 'thiếu hàng') || '';
   const qtyNum = Number(missingQty);
-  if (Number.isNaN(qtyNum) || qtyNum < 0) {
-    return alert('Số lượng không hợp lệ.');
-  }
+  if (Number.isNaN(qtyNum) || qtyNum < 0) return alert('Số lượng không hợp lệ.');
 
   try {
     await apiRequest('saveLineAction', {
@@ -195,7 +179,6 @@ async function skipLine() {
 
     state.currentLines[state.currentIndex].result = 'SKIP';
     state.currentLines[state.currentIndex].missingQty = qtyNum;
-
     await moveNext();
   } catch (err) {
     alert('Lưu SKIP lỗi: ' + err.message);
@@ -230,10 +213,7 @@ async function moveNext() {
 }
 
 function buildSummary(lines) {
-  let ok = 0;
-  let skip = 0;
-  let missing = 0;
-
+  let ok = 0, skip = 0, missing = 0;
   lines.forEach(line => {
     if (line.result === 'OK') ok += 1;
     if (line.result === 'SKIP') {
@@ -241,13 +221,7 @@ function buildSummary(lines) {
       missing += Number(line.missingQty || 0);
     }
   });
-
-  return {
-    total: lines.length,
-    ok,
-    skip,
-    missing
-  };
+  return { total: lines.length, ok, skip, missing };
 }
 
 async function openNextOrderFromSummary() {
@@ -290,7 +264,7 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\"/g, '&quot;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
 
