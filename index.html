@@ -300,6 +300,12 @@
       font-size: 11px;
       word-break: break-all;
     }
+    .opening-placeholder {
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 18px 0;
+    }
     @media (max-width: 640px) {
       .filters, .btn-grid-2, .btn-grid-3, .summary-grid { grid-template-columns: 1fr; }
       .big-value { font-size: 26px; }
@@ -313,7 +319,7 @@
   <div class="container">
     <section id="loginScreen" class="card">
       <h1 class="title">Picking App</h1>
-      <p class="subtitle">Bản 1 file HTML duy nhất, chạy cho cả PDA và smartphone.</p>
+      <p class="subtitle">Bản 1 file HTML duy nhất, tối ưu để vẫn pick được đơn khác khi dữ liệu còn đang ghi nền.</p>
       <div class="api-box">https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec</div>
       <div style="height:10px"></div>
       <label class="subtitle" for="pickerName">Tên picker</label>
@@ -475,8 +481,10 @@
       currentIndex: 0,
       nextOrder: null,
       pendingSaves: 0,
-      actionQueue: Promise.resolve(),
-      queueErrors: []
+      saveQueue: [],
+      processingQueue: false,
+      queueErrors: [],
+      openingOrderLoading: false
     };
 
     function initSavedValues() {
@@ -606,30 +614,54 @@
       `).join('');
     }
 
+    function showOpeningState(doNo) {
+      state.openingOrderLoading = true;
+      state.currentOrder = { doNo: doNo, shiptoNm: 'Đang mở đơn...', tripNo: '-', pickedBy: state.pickerName };
+      state.currentLines = [];
+      state.currentIndex = 0;
+      showSection('pickingScreen');
+      document.getElementById('storeName').textContent = 'Đang mở đơn...';
+      document.getElementById('doNo').textContent = doNo || '';
+      document.getElementById('tripNo').textContent = '-';
+      document.getElementById('lineProgress').textContent = '...';
+      document.getElementById('activePicker').textContent = state.pickerName;
+      document.getElementById('srcCell').innerHTML = '<div class="opening-placeholder">Đang tải vị trí...</div>';
+      document.getElementById('itemCode').innerHTML = '<div class="opening-placeholder">Đang tải mã hàng...</div>';
+      document.getElementById('itemName').innerHTML = '<div class="opening-placeholder">Đang tải tên hàng...</div>';
+      document.getElementById('allocQty').innerHTML = '<div class="opening-placeholder">Đang tải số lượng...</div>';
+      document.getElementById('pickedCount').textContent = '0';
+      document.getElementById('remainingCount').textContent = '0';
+      document.getElementById('pendingSyncCount').textContent = String(state.pendingSaves);
+      document.getElementById('syncText').textContent = 'Đang mở đơn...';
+    }
+
     async function openOrder(doNo) {
+      showOpeningState(doNo);
       try {
         const data = await apiRequest('getPickingLines', { doNo, pickerName: state.pickerName }, 'GET');
         if (!data.order || !Array.isArray(data.lines) || !data.lines.length) {
           alert('Không tìm thấy dữ liệu đơn.');
+          backToOrders();
           return;
         }
         state.currentOrder = data.order;
         state.currentLines = data.lines;
         state.currentIndex = data.lines.findIndex(x => !x.result);
-        state.pendingSaves = 0;
         state.queueErrors = [];
-        state.actionQueue = Promise.resolve();
+        state.openingOrderLoading = false;
 
         if (state.currentIndex < 0) {
           toast('Đơn này đã hoàn thành.');
           await loadOrders();
+          backToOrders();
           return;
         }
 
-        showSection('pickingScreen');
         renderCurrentLine();
       } catch (err) {
+        state.openingOrderLoading = false;
         alert('Không mở được đơn: ' + err.message);
+        backToOrders();
       }
     }
 
@@ -648,22 +680,33 @@
       updateHeaderStats();
     }
 
-    function enqueueSave(payload) {
-      state.pendingSaves += 1;
+    function pushSave(payload) {
+      state.saveQueue.push(payload);
+      state.pendingSaves = state.saveQueue.length + (state.processingQueue ? 1 : 0);
       updateHeaderStats();
+      processSaveQueue();
+    }
 
-      state.actionQueue = state.actionQueue
-        .then(() => apiRequest('saveLineAction', payload))
-        .catch(err => {
+    async function processSaveQueue() {
+      if (state.processingQueue) return;
+      state.processingQueue = true;
+
+      while (state.saveQueue.length) {
+        const payload = state.saveQueue.shift();
+        state.pendingSaves = state.saveQueue.length + 1;
+        updateHeaderStats();
+
+        try {
+          await apiRequest('saveLineAction', payload);
+        } catch (err) {
           state.queueErrors.push(err.message || String(err));
           console.error(err);
-        })
-        .finally(() => {
-          state.pendingSaves = Math.max(0, state.pendingSaves - 1);
-          updateHeaderStats();
-        });
+        }
+      }
 
-      return state.actionQueue;
+      state.processingQueue = false;
+      state.pendingSaves = 0;
+      updateHeaderStats();
     }
 
     function moveToNextLineImmediately() {
@@ -678,12 +721,24 @@
     function scheduleBackgroundSave(payload) {
       requestAnimationFrame(() => {
         setTimeout(() => {
-          enqueueSave(payload);
+          pushSave(payload);
         }, 0);
       });
     }
 
+    function getNextOrderLocal(currentDoNo) {
+      const filtered = [...state.orders]
+        .sort((a, b) => {
+          if ((a.tripNo || 0) !== (b.tripNo || 0)) return (a.tripNo || 0) - (b.tripNo || 0);
+          return String(a.doNo || '').localeCompare(String(b.doNo || ''), 'vi', { numeric: true });
+        })
+        .filter(x => String(x.doNo) !== String(currentDoNo));
+
+      return filtered.length ? filtered[0] : null;
+    }
+
     async function confirmLine() {
+      if (state.openingOrderLoading) return;
       const line = state.currentLines[state.currentIndex];
       if (!line) return;
 
@@ -701,13 +756,13 @@
       scheduleBackgroundSave(payload);
 
       if (finished) {
-        requestAnimationFrame(async () => {
-          await finishCurrentOrderFlow();
-        });
+        state.nextOrder = getNextOrderLocal(state.currentOrder.doNo);
+        finishCurrentOrderFlowInstant();
       }
     }
 
     async function skipLine() {
+      if (state.openingOrderLoading) return;
       const line = state.currentLines[state.currentIndex];
       if (!line) return;
 
@@ -738,29 +793,13 @@
       scheduleBackgroundSave(payload);
 
       if (finished) {
-        requestAnimationFrame(async () => {
-          await finishCurrentOrderFlow();
-        });
+        state.nextOrder = getNextOrderLocal(state.currentOrder.doNo);
+        finishCurrentOrderFlowInstant();
       }
     }
 
-    async function finishCurrentOrderFlow() {
+    function finishCurrentOrderFlowInstant() {
       const summary = buildSummary(state.currentLines);
-
-      try {
-        await state.actionQueue;
-      } catch (_) {}
-
-      if (state.queueErrors.length) {
-        toast('Có thao tác lưu lỗi, kiểm tra lại đơn này');
-      }
-
-      try {
-        const next = await apiRequest('getNextOrderAfter', { doNo: state.currentOrder.doNo }, 'GET');
-        state.nextOrder = next.order || null;
-      } catch (_) {
-        state.nextOrder = null;
-      }
 
       document.getElementById('summaryTitle').textContent = `DO ${state.currentOrder.doNo} đã hoàn thành`;
       document.getElementById('sumTotal').textContent = summary.total;
@@ -768,7 +807,13 @@
       document.getElementById('sumSkip').textContent = summary.skip;
       document.getElementById('sumMissing').textContent = summary.missing;
       showSection('summaryScreen');
-      await loadOrders();
+
+      setTimeout(() => {
+        loadOrders();
+        if (state.queueErrors.length) {
+          toast('Có thao tác lưu lỗi, kiểm tra lại đơn này');
+        }
+      }, 0);
     }
 
     function buildSummary(lines) {
@@ -846,21 +891,20 @@
       }
     }
 
-    async function releaseCurrentOrder() {
+    function releaseCurrentOrder() {
       if (!state.currentOrder) return;
       const yes = confirm(`Nhả đơn ${state.currentOrder.doNo}?`);
       if (!yes) return;
-      try {
-        await state.actionQueue;
-        await apiRequest('releaseOrder', {
-          doNo: state.currentOrder.doNo,
-          pickerName: state.pickerName
-        });
-        toast('Đã nhả đơn.');
-        backToOrders();
-      } catch (err) {
-        alert('Nhả đơn lỗi: ' + err.message);
-      }
+
+      apiRequest('releaseOrder', {
+        doNo: state.currentOrder.doNo,
+        pickerName: state.pickerName
+      }).catch(err => {
+        toast('Nhả đơn lỗi: ' + err.message);
+      });
+
+      toast('Đã gửi yêu cầu nhả đơn.');
+      backToOrders();
     }
 
     function backToOrders() {
