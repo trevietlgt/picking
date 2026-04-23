@@ -6,348 +6,63 @@
   <title>Picking App</title>
   <meta name="theme-color" content="#2563eb" />
   <style>
-    :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --primary: #2563eb;
-      --success: #16a34a;
-      --warning: #f59e0b;
-      --danger: #dc2626;
-      --dark: #111827;
-      --border: #e5e7eb;
-      --shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-      --radius: 16px;
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 10px;
-    }
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 12px;
-      box-shadow: var(--shadow);
-      margin-bottom: 12px;
-    }
-    .title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0 0 6px;
-    }
-    .subtitle {
-      color: var(--muted);
-      font-size: 13px;
-      margin: 0 0 10px;
-      line-height: 1.4;
-    }
-    .meta {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-    .input, .select {
-      width: 100%;
-      padding: 12px 13px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 16px;
-      outline: none;
-      background: #fff;
-    }
-    .btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform .05s ease, opacity .2s ease;
-      min-height: 46px;
-    }
-    .btn:active { transform: translateY(1px); }
-    .btn[disabled] { opacity: .6; cursor: not-allowed; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-success { background: var(--success); color: #fff; }
-    .btn-warning { background: var(--warning); color: #fff; }
-    .btn-danger { background: var(--danger); color: #fff; }
-    .btn-ghost { background: #eef2ff; color: #1e3a8a; }
-    .btn-dark { background: var(--dark); color: #fff; }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .filters {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .btn-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .hidden { display: none !important; }
-    .loading {
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .order-item {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      margin-top: 10px;
-      background: #fff;
-    }
-    .order-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .status-CHUA_PICK { background: #e5e7eb; color: #111827; }
-    .status-DANG_PICK { background: #fef3c7; color: #92400e; }
-    .status-DA_PICK { background: #dcfce7; color: #166534; }
-    .big-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-    .big-value {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 1.15;
-      word-break: break-word;
-    }
-    .center { text-align: center; }
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 10px 0;
-    }
-    .mini-stats {
-      display: flex;
-      gap: 8px;
-      align-items: stretch;
-      flex-wrap: wrap;
-      width: 100%;
-      margin-top: 8px;
-    }
-    .mini-stat {
-      flex: 1 1 30%;
-      min-width: 90px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 10px;
-      text-align: center;
-      background: #fafafa;
-    }
-    .mini-stat .k {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-    .mini-stat .v {
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 1.1;
-    }
-    .sync-text {
-      font-size: 12px;
-      color: #92400e;
-      min-height: 16px;
-      margin-top: 6px;
-      font-weight: 700;
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .summary-box {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-      background: #fff;
-    }
-    .summary-box .n {
-      font-size: 22px;
-      font-weight: 800;
-      margin-top: 6px;
-    }
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: rgba(17, 24, 39, .95);
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      z-index: 9999;
-      font-size: 13px;
-      display: none;
-      max-width: calc(100vw - 24px);
-      white-space: pre-wrap;
-    }
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 24, 39, 0.45);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 12px;
-    }
-    .modal.show { display: flex; }
-    .modal-card {
-      width: min(920px, 100%);
-      max-height: 85vh;
-      overflow: hidden;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-    }
-    .modal-header {
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-    .modal-body {
-      padding: 12px;
-      overflow: auto;
-      background: #fafafa;
-    }
-    .history-list {
-      display: grid;
-      gap: 8px;
-    }
-    .history-item {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-    }
-    .history-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .history-code {
-      font-weight: 800;
-      font-size: 15px;
-    }
-    .history-name {
-      margin-top: 3px;
-      color: var(--text);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .history-meta {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-    .empty-box {
-      text-align: center;
-      color: var(--muted);
-      padding: 20px;
-      background: #fff;
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-    }
-    .api-box {
-      padding: 9px 11px;
-      border-radius: 12px;
-      background: #eff6ff;
-      color: #1e3a8a;
-      font-size: 11px;
-      word-break: break-all;
-    }
-    .opening-placeholder {
-      color: var(--muted);
-      font-size: 16px;
-      font-weight: 700;
-      padding: 18px 0;
-    }
-    .qty-inline {
-      margin-top: 8px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-    .qty-box {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-      background: #fafafa;
-      text-align: center;
-    }
-    .qty-box .k {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .qty-box .v {
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.1;
-    }
-    .order-qty-line {
-      margin-top: 8px;
-      font-size: 15px;
-      font-weight: 700;
-    }
-    @media (max-width: 640px) {
-      .filters, .btn-grid-2, .btn-grid-3, .summary-grid, .qty-inline { grid-template-columns: 1fr; }
-      .big-value { font-size: 26px; }
-      .title { font-size: 20px; }
-      .mini-stat { flex: 1 1 calc(33.333% - 6px); min-width: 0; }
-      .container { padding: 10px; }
-    }
+    :root { --bg:#f4f7fb; --card:#ffffff; --text:#1f2937; --muted:#6b7280; --primary:#2563eb; --success:#16a34a; --warning:#f59e0b; --danger:#dc2626; --dark:#111827; --border:#e5e7eb; --shadow:0 8px 20px rgba(15,23,42,.08); --radius:16px; }
+    * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+    body { font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+    .container { max-width:860px; margin:0 auto; padding:10px; }
+    .card { background:var(--card); border-radius:var(--radius); padding:12px; box-shadow:var(--shadow); margin-bottom:12px; }
+    .title { font-size:20px; font-weight:700; margin:0 0 6px; }
+    .subtitle { color:var(--muted); font-size:13px; margin:0 0 10px; line-height:1.4; }
+    .meta { color:var(--muted); font-size:13px; line-height:1.55; }
+    .input,.select { width:100%; padding:12px 13px; border:1px solid var(--border); border-radius:12px; font-size:16px; outline:none; background:#fff; }
+    .btn { border:0; border-radius:12px; padding:12px 14px; font-size:15px; font-weight:700; cursor:pointer; min-height:46px; }
+    .btn-primary { background:var(--primary); color:#fff; } .btn-success { background:var(--success); color:#fff; } .btn-warning { background:var(--warning); color:#fff; } .btn-danger { background:var(--danger); color:#fff; } .btn-ghost { background:#eef2ff; color:#1e3a8a; } .btn-dark { background:var(--dark); color:#fff; }
+    .row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+    .filters { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .btn-grid-2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .btn-grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .hidden { display:none !important; }
+    .loading { color:var(--muted); font-size:13px; text-align:center; padding:10px 0; }
+    .order-item { border:1px solid var(--border); border-radius:14px; padding:12px; margin-top:10px; background:#fff; }
+    .order-title { font-size:18px; font-weight:700; margin-bottom:4px; }
+    .badge { display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+    .status-CHUA_PICK { background:#e5e7eb; color:#111827; } .status-DANG_PICK { background:#fef3c7; color:#92400e; } .status-DA_PICK { background:#dcfce7; color:#166534; }
+    .big-label { color:var(--muted); font-size:13px; margin-bottom:6px; }
+    .big-value { font-size:30px; font-weight:800; line-height:1.15; word-break:break-word; }
+    .center { text-align:center; } .divider { height:1px; background:var(--border); margin:10px 0; }
+    .mini-stats { display:flex; gap:8px; align-items:stretch; flex-wrap:wrap; width:100%; margin-top:8px; }
+    .mini-stat { flex:1 1 30%; min-width:90px; border:1px solid var(--border); border-radius:12px; padding:8px 10px; text-align:center; background:#fafafa; }
+    .mini-stat .k { font-size:11px; color:var(--muted); margin-bottom:3px; } .mini-stat .v { font-size:20px; font-weight:800; line-height:1.1; }
+    .sync-text { font-size:12px; color:#92400e; min-height:16px; margin-top:6px; font-weight:700; }
+    .summary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .summary-box { border:1px solid var(--border); border-radius:12px; padding:10px; text-align:center; background:#fff; }
+    .summary-box .n { font-size:22px; font-weight:800; margin-top:6px; }
+    .toast { position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:rgba(17,24,39,.95); color:#fff; padding:10px 14px; border-radius:12px; box-shadow:var(--shadow); z-index:9999; font-size:13px; display:none; max-width:calc(100vw - 24px); white-space:pre-wrap; }
+    .modal { position:fixed; inset:0; background:rgba(17,24,39,.45); display:none; align-items:center; justify-content:center; z-index:10000; padding:12px; }
+    .modal.show { display:flex; }
+    .modal-card { width:min(920px,100%); max-height:85vh; overflow:hidden; background:#fff; border-radius:16px; box-shadow:var(--shadow); display:flex; flex-direction:column; }
+    .modal-header { padding:12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .modal-body { padding:12px; overflow:auto; background:#fafafa; }
+    .history-list { display:grid; gap:8px; }
+    .history-item { background:#fff; border:1px solid var(--border); border-radius:12px; padding:10px; }
+    .history-top { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+    .history-code { font-weight:800; font-size:15px; } .history-name { margin-top:3px; color:var(--text); font-size:13px; line-height:1.4; }
+    .history-meta { margin-top:6px; color:var(--muted); font-size:12px; line-height:1.45; }
+    .empty-box { text-align:center; color:var(--muted); padding:20px; background:#fff; border:1px dashed var(--border); border-radius:12px; }
+    .api-box { padding:9px 11px; border-radius:12px; background:#eff6ff; color:#1e3a8a; font-size:11px; word-break:break-all; }
+    .opening-placeholder { color:var(--muted); font-size:16px; font-weight:700; padding:18px 0; }
+    .qty-inline { margin-top:8px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .qty-box { border:1px solid var(--border); border-radius:12px; padding:10px; background:#fafafa; text-align:center; }
+    .qty-box .k { font-size:12px; color:var(--muted); margin-bottom:4px; } .qty-box .v { font-size:24px; font-weight:800; line-height:1.1; }
+    .order-qty-line { margin-top:8px; font-size:15px; font-weight:700; }
+    @media (max-width:640px) { .filters,.btn-grid-2,.btn-grid-3,.summary-grid,.qty-inline { grid-template-columns:1fr; } .big-value { font-size:26px; } .title { font-size:20px; } .mini-stat { flex:1 1 calc(33.333% - 6px); min-width:0; } .container { padding:10px; } }
   </style>
 </head>
 <body>
   <div class="container">
     <section id="loginScreen" class="card">
       <h1 class="title">Picking App</h1>
-      <p class="subtitle">Bản 1 file HTML duy nhất, thêm hiển thị Thùng chẵn và Hàng lẻ.</p>
+      <p class="subtitle">Bản đã đồng bộ lại đúng cột sheet mới để không ghi đè sai dữ liệu.</p>
       <div class="api-box">API: https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec</div>
       <div style="height:10px"></div>
       <label class="subtitle" for="pickerName">Tên picker</label>
@@ -359,26 +74,12 @@
     <section id="ordersScreen" class="hidden">
       <div class="card">
         <div class="row">
-          <div>
-            <div class="title">Danh sách đơn</div>
-            <div id="helloText" class="subtitle"></div>
-          </div>
+          <div><div class="title">Danh sách đơn</div><div id="helloText" class="subtitle"></div></div>
           <button class="btn btn-ghost" onclick="loadOrders()">Tải lại</button>
         </div>
         <div class="filters">
-          <div>
-            <div class="subtitle">Lọc trạng thái</div>
-            <select id="statusFilter" class="select" onchange="renderOrders()">
-              <option value="ALL">Tất cả</option>
-              <option value="CHUA_PICK">Chưa pick</option>
-              <option value="DANG_PICK">Đang pick</option>
-              <option value="DA_PICK">Đã pick</option>
-            </select>
-          </div>
-          <div>
-            <div class="subtitle">Lọc trip</div>
-            <input id="tripFilter" class="input" type="text" placeholder="Ví dụ: 1" oninput="renderOrders()" />
-          </div>
+          <div><div class="subtitle">Lọc trạng thái</div><select id="statusFilter" class="select" onchange="renderOrders()"><option value="ALL">Tất cả</option><option value="CHUA_PICK">Chưa pick</option><option value="DANG_PICK">Đang pick</option><option value="DA_PICK">Đã pick</option></select></div>
+          <div><div class="subtitle">Lọc trip</div><input id="tripFilter" class="input" type="text" placeholder="Ví dụ: 1" oninput="renderOrders()" /></div>
         </div>
       </div>
       <div id="ordersLoading" class="loading hidden">Đang tải dữ liệu...</div>
@@ -391,34 +92,15 @@
           <div>
             <div class="subtitle">Cửa hàng</div>
             <div id="storeName" class="title"></div>
-            <div class="meta">
-              DO: <b id="doNo"></b><br>
-              Trip: <b id="tripNo"></b><br>
-              Tiến độ: <b id="lineProgress"></b><br>
-              Picker: <b id="activePicker"></b>
-            </div>
+            <div class="meta">DO: <b id="doNo"></b><br>Trip: <b id="tripNo"></b><br>Tiến độ: <b id="lineProgress"></b><br>Picker: <b id="activePicker"></b></div>
           </div>
         </div>
-
-        <div style="margin-top:8px;">
-          <button class="btn btn-dark" onclick="openHistoryModal()">Xem lịch sử đã pick</button>
-        </div>
-
+        <div style="margin-top:8px;"><button class="btn btn-dark" onclick="openHistoryModal()">Xem lịch sử đã pick</button></div>
         <div class="mini-stats">
-          <div class="mini-stat">
-            <div class="k">Đã pick</div>
-            <div id="pickedCount" class="v">0</div>
-          </div>
-          <div class="mini-stat">
-            <div class="k">Còn lại</div>
-            <div id="remainingCount" class="v">0</div>
-          </div>
-          <div class="mini-stat">
-            <div class="k">Đang xử lý</div>
-            <div id="pendingSyncCount" class="v">0</div>
-          </div>
+          <div class="mini-stat"><div class="k">Đã pick</div><div id="pickedCount" class="v">0</div></div>
+          <div class="mini-stat"><div class="k">Còn lại</div><div id="remainingCount" class="v">0</div></div>
+          <div class="mini-stat"><div class="k">Đang xử lý</div><div id="pendingSyncCount" class="v">0</div></div>
         </div>
-
         <div id="syncText" class="sync-text"></div>
       </div>
 
@@ -434,14 +116,8 @@
         <div style="height:10px"></div>
         <div class="big-label">Số lượng cần lấy</div>
         <div class="qty-inline">
-          <div class="qty-box">
-            <div class="k">Thùng chẵn</div>
-            <div id="caseQty" class="v">0</div>
-          </div>
-          <div class="qty-box">
-            <div class="k">Hàng lẻ</div>
-            <div id="looseQty" class="v">0</div>
-          </div>
+          <div class="qty-box"><div class="k">Thùng chẵn</div><div id="caseQty" class="v">0</div></div>
+          <div class="qty-box"><div class="k">Hàng lẻ</div><div id="looseQty" class="v">0</div></div>
         </div>
       </div>
 
@@ -461,22 +137,10 @@
         <div class="title">Hoàn thành đơn</div>
         <div id="summaryTitle" class="subtitle"></div>
         <div class="summary-grid">
-          <div class="summary-box">
-            <div>Tổng dòng</div>
-            <div id="sumTotal" class="n">0</div>
-          </div>
-          <div class="summary-box">
-            <div>OK</div>
-            <div id="sumOk" class="n">0</div>
-          </div>
-          <div class="summary-box">
-            <div>SKIP</div>
-            <div id="sumSkip" class="n">0</div>
-          </div>
-          <div class="summary-box">
-            <div>Missing Qty</div>
-            <div id="sumMissing" class="n">0</div>
-          </div>
+          <div class="summary-box"><div>Tổng dòng</div><div id="sumTotal" class="n">0</div></div>
+          <div class="summary-box"><div>OK</div><div id="sumOk" class="n">0</div></div>
+          <div class="summary-box"><div>SKIP</div><div id="sumSkip" class="n">0</div></div>
+          <div class="summary-box"><div>Missing Qty</div><div id="sumMissing" class="n">0</div></div>
         </div>
         <div style="height:10px"></div>
         <div class="btn-grid-2">
@@ -488,101 +152,40 @@
   </div>
 
   <div id="toast" class="toast"></div>
-
   <div id="historyModal" class="modal" onclick="closeHistoryModal(event)">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <div>
-          <div class="title" style="margin:0;font-size:20px;">Lịch sử mã hàng đã pick</div>
-          <div id="historySubtitle" class="subtitle" style="margin:6px 0 0 0;"></div>
-        </div>
+        <div><div class="title" style="margin:0;font-size:20px;">Lịch sử mã hàng đã pick</div><div id="historySubtitle" class="subtitle" style="margin:6px 0 0 0;"></div></div>
         <button class="btn btn-ghost" onclick="closeHistoryModal()">Đóng</button>
       </div>
-      <div class="modal-body">
-        <div id="historyList" class="history-list"></div>
-      </div>
+      <div class="modal-body"><div id="historyList" class="history-list"></div></div>
     </div>
   </div>
 
   <script>
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec';
-    const STORAGE_KEYS = {
-      PICKER: 'picking_picker_name'
-    };
+    const STORAGE_KEYS = { PICKER: 'picking_picker_name' };
+    const state = { apiUrl: DEFAULT_API_URL, pickerName: '', orders: [], currentOrder: null, currentLines: [], currentIndex: 0, nextOrder: null, pendingSaves: 0, saveQueue: [], processingQueue: false, queueErrors: [], openingOrderLoading: false };
 
-    const state = {
-      apiUrl: DEFAULT_API_URL,
-      pickerName: '',
-      orders: [],
-      currentOrder: null,
-      currentLines: [],
-      currentIndex: 0,
-      nextOrder: null,
-      pendingSaves: 0,
-      saveQueue: [],
-      processingQueue: false,
-      queueErrors: [],
-      openingOrderLoading: false
-    };
-
-    function initSavedValues() {
-      const savedPicker = localStorage.getItem(STORAGE_KEYS.PICKER) || '';
-      document.getElementById('pickerName').value = savedPicker;
-    }
-
-    function toast(message) {
-      const box = document.getElementById('toast');
-      box.textContent = message;
-      box.style.display = 'block';
-      clearTimeout(box._timer);
-      box._timer = setTimeout(() => {
-        box.style.display = 'none';
-      }, 2500);
-    }
-
-    function showSection(sectionId) {
-      ['loginScreen', 'ordersScreen', 'pickingScreen', 'summaryScreen'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-      });
-      document.getElementById(sectionId).classList.remove('hidden');
-    }
-
-    function updateSyncText() {
-      const text = document.getElementById('syncText');
-      if (!text) return;
-      text.textContent = state.pendingSaves > 0 ? 'Đang xử lý' : '';
-    }
-
-    function updateHeaderStats() {
-      const picked = state.currentLines.filter(x => x.result === 'OK' || x.result === 'SKIP').length;
-      const remaining = state.currentLines.filter(x => !x.result).length;
-      document.getElementById('pickedCount').textContent = String(picked);
-      document.getElementById('remainingCount').textContent = String(remaining);
-      document.getElementById('pendingSyncCount').textContent = String(state.pendingSaves);
-      updateSyncText();
-    }
+    function initSavedValues() { const savedPicker = localStorage.getItem(STORAGE_KEYS.PICKER) || ''; document.getElementById('pickerName').value = savedPicker; }
+    function toast(message) { const box = document.getElementById('toast'); box.textContent = message; box.style.display = 'block'; clearTimeout(box._timer); box._timer = setTimeout(() => box.style.display = 'none', 2500); }
+    function showSection(sectionId) { ['loginScreen','ordersScreen','pickingScreen','summaryScreen'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById(sectionId).classList.remove('hidden'); }
+    function updateSyncText() { const text = document.getElementById('syncText'); if (text) text.textContent = state.pendingSaves > 0 ? 'Đang xử lý' : ''; }
+    function updateHeaderStats() { const picked = state.currentLines.filter(x => x.result === 'OK' || x.result === 'SKIP').length; const remaining = state.currentLines.filter(x => !x.result).length; document.getElementById('pickedCount').textContent = String(picked); document.getElementById('remainingCount').textContent = String(remaining); document.getElementById('pendingSyncCount').textContent = String(state.pendingSaves); updateSyncText(); }
 
     async function apiRequest(action, payload = {}, method = 'POST') {
       if (!state.apiUrl) throw new Error('Thiếu API URL');
-
       if (method === 'GET') {
         const url = new URL(state.apiUrl);
         url.searchParams.set('action', action);
-        Object.entries(payload).forEach(([k, v]) => {
-          if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, v);
-        });
+        Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, v); });
         const res = await fetch(url.toString(), { method: 'GET' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (data.success === false) throw new Error(data.message || 'API error');
         return data;
       }
-
-      const res = await fetch(state.apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action, ...payload })
-      });
+      const res = await fetch(state.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, ...payload }) });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       if (data.success === false) throw new Error(data.message || 'API error');
@@ -591,10 +194,7 @@
 
     async function startApp() {
       const pickerName = document.getElementById('pickerName').value.trim();
-      if (!pickerName) {
-        alert('Anh nhập tên picker trước nhé.');
-        return;
-      }
+      if (!pickerName) return alert('Anh nhập tên picker trước nhé.');
       state.pickerName = pickerName;
       localStorage.setItem(STORAGE_KEYS.PICKER, pickerName);
       document.getElementById('helloText').textContent = `Picker: ${pickerName}`;
@@ -619,37 +219,23 @@
       const box = document.getElementById('ordersList');
       const statusFilter = document.getElementById('statusFilter').value;
       const tripFilter = document.getElementById('tripFilter').value.trim();
-
       let orders = [...state.orders];
-      if (statusFilter !== 'ALL') {
-        orders = orders.filter(o => o.status === statusFilter);
-      }
-      if (tripFilter) {
-        orders = orders.filter(o => String(o.tripNo) === tripFilter);
-      }
-
-      if (!orders.length) {
-        box.innerHTML = '<div class="card">Không có đơn phù hợp.</div>';
-        return;
-      }
+      if (statusFilter !== 'ALL') orders = orders.filter(o => o.status === statusFilter);
+      if (tripFilter) orders = orders.filter(o => String(o.tripNo) === tripFilter);
+      if (!orders.length) { box.innerHTML = '<div class="card">Không có đơn phù hợp.</div>'; return; }
 
       box.innerHTML = orders.map(o => `
         <div class="order-item">
           <div class="row">
             <div>
               <div class="order-title">${escapeHtml(o.shiptoNm || '')}</div>
-              <div class="meta">
-                DO: <b>${escapeHtml(o.doNo || '')}</b><br>
-                Trip: <b>${escapeHtml(String(o.tripNo || ''))}</b><br>
-                Tiến độ: <b>${o.doneLines || 0}/${o.totalLines || 0}</b>${o.pickedBy ? `<br>Đang giữ bởi: <b>${escapeHtml(o.pickedBy)}</b>` : ''}
-              </div>
+              <div class="meta">DO: <b>${escapeHtml(o.doNo || '')}</b><br>Trip: <b>${escapeHtml(String(o.tripNo || ''))}</b><br>Tiến độ: <b>${o.doneLines || 0}/${o.totalLines || 0}</b>${o.pickedBy ? `<br>Đang giữ bởi: <b>${escapeHtml(o.pickedBy)}</b>` : ''}</div>
             </div>
             <span class="badge status-${o.status}">${o.status}</span>
           </div>
           <div style="height:10px"></div>
           <button class="btn btn-primary" onclick="openOrder('${encodeForAttr(o.doNo)}')">Mở đơn</button>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
 
     function showOpeningState(doNo) {
@@ -679,24 +265,13 @@
       showOpeningState(doNo);
       try {
         const data = await apiRequest('getPickingLines', { doNo, pickerName: state.pickerName }, 'GET');
-        if (!data.order || !Array.isArray(data.lines) || !data.lines.length) {
-          alert('Không tìm thấy dữ liệu đơn.');
-          backToOrders();
-          return;
-        }
+        if (!data.order || !Array.isArray(data.lines) || !data.lines.length) { alert('Không tìm thấy dữ liệu đơn.'); backToOrders(); return; }
         state.currentOrder = data.order;
         state.currentLines = data.lines;
         state.currentIndex = data.lines.findIndex(x => !x.result);
         state.queueErrors = [];
         state.openingOrderLoading = false;
-
-        if (state.currentIndex < 0) {
-          toast('Đơn này đã hoàn thành.');
-          await loadOrders();
-          backToOrders();
-          return;
-        }
-
+        if (state.currentIndex < 0) { toast('Đơn này đã hoàn thành.'); await loadOrders(); backToOrders(); return; }
         renderCurrentLine();
       } catch (err) {
         state.openingOrderLoading = false;
@@ -717,8 +292,8 @@
       document.getElementById('itemCode').textContent = line.itemCode || '';
       document.getElementById('itemName').textContent = line.itemName || '';
       document.getElementById('orderQty').textContent = line.allocQty || 0;
-      document.getElementById('caseQty').textContent = line['Thùng chẵn'] || 0;
-      document.getElementById('looseQty').textContent = line['Hàng lẻ'] || 0;
+      document.getElementById('caseQty').textContent = line.caseQty || 0;
+      document.getElementById('looseQty').textContent = line.looseQty || 0;
       updateHeaderStats();
     }
 
@@ -732,20 +307,12 @@
     async function processSaveQueue() {
       if (state.processingQueue) return;
       state.processingQueue = true;
-
       while (state.saveQueue.length) {
         const payload = state.saveQueue.shift();
         state.pendingSaves = state.saveQueue.length + 1;
         updateHeaderStats();
-
-        try {
-          await apiRequest('saveLineAction', payload);
-        } catch (err) {
-          state.queueErrors.push(err.message || String(err));
-          console.error(err);
-        }
+        try { await apiRequest('saveLineAction', payload); } catch (err) { state.queueErrors.push(err.message || String(err)); console.error(err); }
       }
-
       state.processingQueue = false;
       state.pendingSaves = 0;
       updateHeaderStats();
@@ -753,29 +320,16 @@
 
     function moveToNextLineImmediately() {
       state.currentIndex += 1;
-      if (state.currentIndex < state.currentLines.length) {
-        renderCurrentLine();
-        return false;
-      }
+      if (state.currentIndex < state.currentLines.length) { renderCurrentLine(); return false; }
       return true;
     }
 
     function scheduleBackgroundSave(payload) {
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          pushSave(payload);
-        }, 0);
-      });
+      requestAnimationFrame(() => { setTimeout(() => { pushSave(payload); }, 0); });
     }
 
     function getNextOrderLocal(currentDoNo) {
-      const filtered = [...state.orders]
-        .sort((a, b) => {
-          if ((a.tripNo || 0) !== (b.tripNo || 0)) return (a.tripNo || 0) - (b.tripNo || 0);
-          return String(a.doNo || '').localeCompare(String(b.doNo || ''), 'vi', { numeric: true });
-        })
-        .filter(x => String(x.doNo) !== String(currentDoNo));
-
+      const filtered = [...state.orders].sort((a, b) => { if ((a.tripNo || 0) !== (b.tripNo || 0)) return (a.tripNo || 0) - (b.tripNo || 0); return String(a.doNo || '').localeCompare(String(b.doNo || ''), 'vi', { numeric: true }); }).filter(x => String(x.doNo) !== String(currentDoNo));
       return filtered.length ? filtered[0] : null;
     }
 
@@ -783,130 +337,67 @@
       if (state.openingOrderLoading) return;
       const line = state.currentLines[state.currentIndex];
       if (!line) return;
-
-      const payload = {
-        rowNumber: line.rowNumber,
-        actionType: 'CONFIRM',
-        pickerName: state.pickerName
-      };
-
+      const payload = { rowNumber: line.rowNumber, actionType: 'CONFIRM', pickerName: state.pickerName };
       state.currentLines[state.currentIndex].result = 'OK';
       state.currentLines[state.currentIndex].missingQty = 0;
       state.currentLines[state.currentIndex].skipReason = '';
-
       const finished = moveToNextLineImmediately();
       scheduleBackgroundSave(payload);
-
-      if (finished) {
-        state.nextOrder = getNextOrderLocal(state.currentOrder.doNo);
-        finishCurrentOrderFlowInstant();
-      }
+      if (finished) { state.nextOrder = getNextOrderLocal(state.currentOrder.doNo); finishCurrentOrderFlowInstant(); }
     }
 
     async function skipLine() {
       if (state.openingOrderLoading) return;
       const line = state.currentLines[state.currentIndex];
       if (!line) return;
-
       const missingQty = prompt('Nhập số lượng chưa lấy được:');
       if (missingQty === null) return;
-
       const qtyNum = Number(missingQty);
-      if (Number.isNaN(qtyNum) || qtyNum < 0) {
-        alert('Số lượng không hợp lệ.');
-        return;
-      }
-
+      if (Number.isNaN(qtyNum) || qtyNum < 0) return alert('Số lượng không hợp lệ.');
       const reason = prompt('Lý do skip (ví dụ: thiếu hàng / hết hàng):', 'thiếu hàng') || '';
-
-      const payload = {
-        rowNumber: line.rowNumber,
-        actionType: 'SKIP',
-        missingQty: qtyNum,
-        skipReason: reason,
-        pickerName: state.pickerName
-      };
-
+      const payload = { rowNumber: line.rowNumber, actionType: 'SKIP', missingQty: qtyNum, skipReason: reason, pickerName: state.pickerName };
       state.currentLines[state.currentIndex].result = 'SKIP';
       state.currentLines[state.currentIndex].missingQty = qtyNum;
       state.currentLines[state.currentIndex].skipReason = reason;
-
       const finished = moveToNextLineImmediately();
       scheduleBackgroundSave(payload);
-
-      if (finished) {
-        state.nextOrder = getNextOrderLocal(state.currentOrder.doNo);
-        finishCurrentOrderFlowInstant();
-      }
+      if (finished) { state.nextOrder = getNextOrderLocal(state.currentOrder.doNo); finishCurrentOrderFlowInstant(); }
     }
 
     function finishCurrentOrderFlowInstant() {
       const summary = buildSummary(state.currentLines);
-
       document.getElementById('summaryTitle').textContent = `DO ${state.currentOrder.doNo} đã hoàn thành`;
       document.getElementById('sumTotal').textContent = summary.total;
       document.getElementById('sumOk').textContent = summary.ok;
       document.getElementById('sumSkip').textContent = summary.skip;
       document.getElementById('sumMissing').textContent = summary.missing;
       showSection('summaryScreen');
-
-      setTimeout(() => {
-        loadOrders();
-        if (state.queueErrors.length) {
-          toast('Có thao tác lưu lỗi, kiểm tra lại đơn này');
-        }
-      }, 0);
+      setTimeout(() => { loadOrders(); if (state.queueErrors.length) toast('Có thao tác lưu lỗi, kiểm tra lại đơn này'); }, 0);
     }
 
     function buildSummary(lines) {
       let ok = 0, skip = 0, missing = 0;
-      lines.forEach(line => {
-        if (line.result === 'OK') ok += 1;
-        if (line.result === 'SKIP') {
-          skip += 1;
-          missing += Number(line.missingQty || 0);
-        }
-      });
+      lines.forEach(line => { if (line.result === 'OK') ok += 1; if (line.result === 'SKIP') { skip += 1; missing += Number(line.missingQty || 0); } });
       return { total: lines.length, ok, skip, missing };
     }
 
     function getPickedHistory() {
-      return state.currentLines
-        .filter(line => line.result === 'OK' || line.result === 'SKIP')
-        .map(line => ({
-          itemCode: line.itemCode || '',
-          itemName: line.itemName || '',
-          srcCell: line.srcCell || '',
-          allocQty: line.allocQty || 0,
-          result: line.result || '',
-          missingQty: Number(line.missingQty || 0),
-          skipReason: line.skipReason || '',
-          caseQty: line['Thùng chẵn'] || 0,
-          looseQty: line['Hàng lẻ'] || 0
-        }));
+      return state.currentLines.filter(line => line.result === 'OK' || line.result === 'SKIP').map(line => ({ itemCode: line.itemCode || '', itemName: line.itemName || '', srcCell: line.srcCell || '', allocQty: line.allocQty || 0, result: line.result || '', missingQty: Number(line.missingQty || 0), skipReason: line.skipReason || '', caseQty: line.caseQty || 0, looseQty: line.looseQty || 0 }));
     }
 
     function openHistoryModal() {
       const modal = document.getElementById('historyModal');
       const list = document.getElementById('historyList');
       const subtitle = document.getElementById('historySubtitle');
-
-      subtitle.textContent = state.currentOrder
-        ? `DO ${state.currentOrder.doNo} - ${state.currentOrder.shiptoNm || ''}`
-        : 'Chưa có đơn nào mở';
-
+      subtitle.textContent = state.currentOrder ? `DO ${state.currentOrder.doNo} - ${state.currentOrder.shiptoNm || ''}` : 'Chưa có đơn nào mở';
       const history = getPickedHistory();
-
       if (!history.length) {
         list.innerHTML = '<div class="empty-box">Chưa có mã hàng nào được pick trong đơn này.</div>';
       } else {
         list.innerHTML = history.map((item, index) => `
           <div class="history-item">
             <div class="history-top">
-              <div>
-                <div class="history-code">${index + 1}. ${escapeHtml(item.itemCode)}</div>
-                <div class="history-name">${escapeHtml(item.itemName)}</div>
-              </div>
+              <div><div class="history-code">${index + 1}. ${escapeHtml(item.itemCode)}</div><div class="history-name">${escapeHtml(item.itemName)}</div></div>
               <span class="badge status-${item.result === 'OK' ? 'DA_PICK' : 'DANG_PICK'}">${item.result}</span>
             </div>
             <div class="history-meta">
@@ -916,66 +407,25 @@
               Hàng lẻ: <b>${item.looseQty}</b>
               ${item.result === 'SKIP' ? `<br>Thiếu: <b>${item.missingQty}</b>${item.skipReason ? `<br>Lý do: <b>${escapeHtml(item.skipReason)}</b>` : ''}` : ''}
             </div>
-          </div>
-        `).join('');
+          </div>`).join('');
       }
-
       modal.classList.add('show');
     }
 
-    function closeHistoryModal(event) {
-      if (event && event.target && event.target.id !== 'historyModal') return;
-      document.getElementById('historyModal').classList.remove('show');
-    }
-
-    async function openNextOrderFromSummary() {
-      if (state.nextOrder && state.nextOrder.doNo) {
-        await openOrder(state.nextOrder.doNo);
-      } else {
-        showSection('ordersScreen');
-        await loadOrders();
-      }
-    }
-
+    function closeHistoryModal(event) { if (event && event.target && event.target.id !== 'historyModal') return; document.getElementById('historyModal').classList.remove('show'); }
+    async function openNextOrderFromSummary() { if (state.nextOrder && state.nextOrder.doNo) await openOrder(state.nextOrder.doNo); else { showSection('ordersScreen'); await loadOrders(); } }
     function releaseCurrentOrder() {
       if (!state.currentOrder) return;
       const yes = confirm(`Nhả đơn ${state.currentOrder.doNo}?`);
       if (!yes) return;
-
-      apiRequest('releaseOrder', {
-        doNo: state.currentOrder.doNo,
-        pickerName: state.pickerName
-      }).catch(err => {
-        toast('Nhả đơn lỗi: ' + err.message);
-      });
-
+      apiRequest('releaseOrder', { doNo: state.currentOrder.doNo, pickerName: state.pickerName }).catch(err => toast('Nhả đơn lỗi: ' + err.message));
       toast('Đã gửi yêu cầu nhả đơn.');
       backToOrders();
     }
-
-    function backToOrders() {
-      showSection('ordersScreen');
-      loadOrders();
-    }
-
-    function goOrdersFromSummary() {
-      showSection('ordersScreen');
-      loadOrders();
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function encodeForAttr(str) {
-      return String(str).replace(/'/g, "\'");
-    }
-
+    function backToOrders() { showSection('ordersScreen'); loadOrders(); }
+    function goOrdersFromSummary() { showSection('ordersScreen'); loadOrders(); }
+    function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+    function encodeForAttr(str) { return String(str).replace(/'/g, "\\'"); }
     document.addEventListener('DOMContentLoaded', initSavedValues);
   </script>
 </body>
