@@ -306,8 +306,36 @@
       font-weight: 700;
       padding: 18px 0;
     }
+    .qty-inline {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .qty-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      background: #fafafa;
+      text-align: center;
+    }
+    .qty-box .k {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .qty-box .v {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .order-qty-line {
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: 700;
+    }
     @media (max-width: 640px) {
-      .filters, .btn-grid-2, .btn-grid-3, .summary-grid { grid-template-columns: 1fr; }
+      .filters, .btn-grid-2, .btn-grid-3, .summary-grid, .qty-inline { grid-template-columns: 1fr; }
       .big-value { font-size: 26px; }
       .title { font-size: 20px; }
       .mini-stat { flex: 1 1 calc(33.333% - 6px); min-width: 0; }
@@ -319,8 +347,8 @@
   <div class="container">
     <section id="loginScreen" class="card">
       <h1 class="title">Picking App</h1>
-      <p class="subtitle">Bản 1 file HTML duy nhất, tối ưu để vẫn pick được đơn khác khi dữ liệu còn đang ghi nền.</p>
-      <div class="api-box">https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec</div>
+      <p class="subtitle">Bản 1 file HTML duy nhất, thêm hiển thị Thùng chẵn và Hàng lẻ.</p>
+      <div class="api-box">API: https://script.google.com/macros/s/AKfycbxJl4vMd8YJlmrZv90Wo2pUh8-mxLno2oPPisB6NkN3FjoYbFYSncu3JN-MdrXYwNdfSA/exec</div>
       <div style="height:10px"></div>
       <label class="subtitle" for="pickerName">Tên picker</label>
       <input id="pickerName" class="input" type="text" placeholder="Ví dụ: Đức / Picker 1" />
@@ -402,9 +430,19 @@
         <div id="itemCode" class="title"></div>
         <div class="big-label">Tên hàng</div>
         <div id="itemName" style="font-size:18px;font-weight:700"></div>
+        <div class="order-qty-line">Số lượng đặt hàng: <span id="orderQty">0</span></div>
         <div style="height:10px"></div>
         <div class="big-label">Số lượng cần lấy</div>
-        <div id="allocQty" class="big-value"></div>
+        <div class="qty-inline">
+          <div class="qty-box">
+            <div class="k">Thùng chẵn</div>
+            <div id="caseQty" class="v">0</div>
+          </div>
+          <div class="qty-box">
+            <div class="k">Hàng lẻ</div>
+            <div id="looseQty" class="v">0</div>
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -628,7 +666,9 @@
       document.getElementById('srcCell').innerHTML = '<div class="opening-placeholder">Đang tải vị trí...</div>';
       document.getElementById('itemCode').innerHTML = '<div class="opening-placeholder">Đang tải mã hàng...</div>';
       document.getElementById('itemName').innerHTML = '<div class="opening-placeholder">Đang tải tên hàng...</div>';
-      document.getElementById('allocQty').innerHTML = '<div class="opening-placeholder">Đang tải số lượng...</div>';
+      document.getElementById('orderQty').textContent = '0';
+      document.getElementById('caseQty').textContent = '0';
+      document.getElementById('looseQty').textContent = '0';
       document.getElementById('pickedCount').textContent = '0';
       document.getElementById('remainingCount').textContent = '0';
       document.getElementById('pendingSyncCount').textContent = String(state.pendingSaves);
@@ -676,7 +716,9 @@
       document.getElementById('srcCell').textContent = line.srcCell || '';
       document.getElementById('itemCode').textContent = line.itemCode || '';
       document.getElementById('itemName').textContent = line.itemName || '';
-      document.getElementById('allocQty').textContent = line.allocQty || 0;
+      document.getElementById('orderQty').textContent = line.allocQty || 0;
+      document.getElementById('caseQty').textContent = line['Thùng chẵn'] || 0;
+      document.getElementById('looseQty').textContent = line['Hàng lẻ'] || 0;
       updateHeaderStats();
     }
 
@@ -838,7 +880,9 @@
           allocQty: line.allocQty || 0,
           result: line.result || '',
           missingQty: Number(line.missingQty || 0),
-          skipReason: line.skipReason || ''
+          skipReason: line.skipReason || '',
+          caseQty: line['Thùng chẵn'] || 0,
+          looseQty: line['Hàng lẻ'] || 0
         }));
     }
 
@@ -867,7 +911,9 @@
             </div>
             <div class="history-meta">
               Vị trí: <b>${escapeHtml(item.srcCell)}</b><br>
-              Số lượng cần lấy: <b>${item.allocQty}</b>
+              Số lượng đặt hàng: <b>${item.allocQty}</b><br>
+              Thùng chẵn: <b>${item.caseQty}</b><br>
+              Hàng lẻ: <b>${item.looseQty}</b>
               ${item.result === 'SKIP' ? `<br>Thiếu: <b>${item.missingQty}</b>${item.skipReason ? `<br>Lý do: <b>${escapeHtml(item.skipReason)}</b>` : ''}` : ''}
             </div>
           </div>
@@ -927,7 +973,7 @@
     }
 
     function encodeForAttr(str) {
-      return String(str).replace(/'/g, "\\'");
+      return String(str).replace(/'/g, "\'");
     }
 
     document.addEventListener('DOMContentLoaded', initSavedValues);
